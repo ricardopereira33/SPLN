@@ -17,6 +17,8 @@ my $right  = qr[(?=(.{21}))];
 # var with the searched name
 my $wanted = "{Cosette}";
 
+my $files = 'output.dot';
+my $OUTFILE;
 
 while (<>){
     while(/$left$wanted$right/g){
@@ -29,15 +31,27 @@ while (<>){
     }
 }
 
-print("============== LIST =====================\n");
-print("=\tNames\t\tTimes\t\t=\n");
-print("=---------------------------------------=\n");
-for(sort{$names{$a} <=> $names{$b}} keys %names){
-    print("|=>\t$_\t\t$names{$_}\n");
+#print("============== LIST =====================\n");
+#print("=\tNames\t\tTimes\t\t=\n");
+#print("=---------------------------------------=\n");
+#for(sort{$names{$a} <=> $names{$b}} keys %names){
+#    print("|=>\t$_\t\t$names{$_}\n");
+#}
+#print("\n============== END =====================\n");
 
+if (-f $files) {
+    unlink $files
 }
-print("\n============== END =====================\n");
 
+open $OUTFILE, '>>', $files
+
+for(sort{$names{$a} <=> $names{$b}} keys %names){
+    print("$wanted -> $names{$_}\n");
+}
+
+print { $OUTFILE } "Something\n"
+
+close $OUTFILE
 
 # FUNCTIONS
 
