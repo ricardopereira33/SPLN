@@ -15,13 +15,14 @@ my $center = qr[\{(.*?)\}];
 my $right  = qr[(?=(.{21}))];
 
 # var with the searched name
-my $wanted = "{Cosette}";
+my $wanted = "Cosette";
 
+# var with the output file
 my $files = 'output.dot';
 my $OUTFILE;
 
 while (<>){
-    while(/$left$wanted$right/g){
+    while(/$left\{$wanted\}$right/g){
       print("-------------------------------------------------\n");
       print("Left = '$1' \nCenter =  '$wanted'\nRight = '$2'\n");
       print("Original Phrase: $1 $wanted $2\n");
@@ -31,27 +32,22 @@ while (<>){
     }
 }
 
-#print("============== LIST =====================\n");
-#print("=\tNames\t\tTimes\t\t=\n");
-#print("=---------------------------------------=\n");
-#for(sort{$names{$a} <=> $names{$b}} keys %names){
-#    print("|=>\t$_\t\t$names{$_}\n");
-#}
-#print("\n============== END =====================\n");
-
 if (-f $files) {
     unlink $files
 }
 
-open $OUTFILE, '>>', $files
+open $OUTFILE, '>>', $files;
+
+print { $OUTFILE }("digraph G {\n");
 
 for(sort{$names{$a} <=> $names{$b}} keys %names){
-    print("$wanted -> $names{$_}\n");
+    print{ $OUTFILE }("\t$wanted -> $_;\n");
 }
 
-print { $OUTFILE } "Something\n"
+print { $OUTFILE }("}\n");
 
-close $OUTFILE
+close $OUTFILE;
+
 
 # FUNCTIONS
 
@@ -66,7 +62,6 @@ sub findNames{
 
     return;
 }
-
 
 ## Man instructions
 
