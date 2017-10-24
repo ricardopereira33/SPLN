@@ -5,7 +5,6 @@ use strict;
 use utf8::all;
 $/ = ''; # processar paragrafo a paragrafo
 
-
 # list with the neighbords names
 my %names;
 
@@ -15,7 +14,7 @@ my $center = qr[\{(.*?)\}];
 my $right  = qr[(?=(.{21}))];
 
 # var with the searched name
-my $wanted = "Cosette";
+my $wanted = shift;
 
 # var with the output file
 my $files = 'output.dot';
@@ -32,6 +31,8 @@ while (<>){
     }
 }
 
+
+# write in a file
 if (-f $files) {
     unlink $files
 }
