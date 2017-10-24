@@ -20,7 +20,6 @@ my %failed = ("Em", "Aquela", "Lá", "Isto", "Duas", "Chamava", "Verão", "Assim
 my $np= qr[(\{.*?\})];
 my $left   = qr[(([ \w{}]+){1,5})];
 my $center = qr[\{(.*?)\}];
-my $right  = qr[(?=(( [\w{}]+){1,5}))];
 
 # var with the output file
 my $files = 'output.dot';
@@ -37,6 +36,8 @@ while (<>){
     }
 }
 
+
+# write in a file
 if (-f $files) {
     unlink $files
 }
