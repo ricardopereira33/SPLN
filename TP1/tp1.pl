@@ -17,26 +17,25 @@ my %failed = ("Em", "Aquela", "Lá", "Isto", "Duas", "Chamava", "Verão", "Assim
 
 # regex to find the left and right side (the $center is for all names)
 #my $left   = qr[(?<=\b(.{21}))];
-my $np= qr[(\{.*?\})];
-my $left   = qr[(([ \w{}]+){1,5})];
-my $center = qr[\{(.*?)\}];
-my $left   = qr[(?=(([ \w{}]+){1,5}))];
+my $np     = qr[(\{.*?\})];
+my $left   = qr[([ \w{}]+){1,5}];
+my $right  = qr[(?=(([ \w{}]+){1,5}))];
 
 # var with the output file
 my $files = 'output.dot';
 my $OUTFILE;
 
-while (<>){
+while(<>){
     while(/$np$left\{$wanted\}$right/g){
       print("-------------------------------------------------\n");
-      print("Left = '$1 $2' \nCenter = '$wanted'\nRight = '$4'\n");
-      print("Original Phrase: $1 $2 $wanted $4\n");
+      print("Left = '$1 $2' \nCenter = '$wanted'\nRight = '$3'\n");
+      print("Original Phrase: $1 $2 $wanted $3\n");
+      print("\$1: $1\n\$2: $2\n\$3: $3\n");
       print("-------------------------------------------------\n");
       findNames($1);
-      findNames($2);
+      findNames($3);
     }
 }
-
 
 # write in a file
 if (-f $files) {
@@ -62,7 +61,7 @@ sub findNames{
     my $words = shift;
     print("Phrase:\t$words\n\n");
 
-    if($words =~ /$center/g && ){
+    if($words =~ /$np/g){
         print("-> Find:\t$1\n\n");
         $names{$1}++;
     }
