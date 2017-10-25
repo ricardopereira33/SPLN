@@ -7,68 +7,79 @@ use utf8::all;
 $/ = ''; # processar paragrafo a paragrafo
 
 # var with the searched name
-#my $wanted = "Cosette";
 my $wanted = shift;
 
 # list with the neighbords names
 my %names;
+
 # lists failed names
-my %failed = ("Em", "Aquela", "Lá", "Isto", "Duas", "Chamava", "Verão", "Assim", "Bem");
+my @failed = ("Em", "Aquela", "Lá", "Isto", "Duas", "Chamava", "Ao",
+    "Verão", "Assim", "Bem", "Era", "Eis", "Foi", "Aí", "Vi", "Uma",
+    "Lembrou-se", "Onde", "Dois", "Meu", "Isso", "Eu", "Limitamo-nos",
+    "Dizendo-me", "No", "Na", "Não", "Quem", "Perdão", "Prato", "Ouvira", "Que",
+    "Atirem", "Já", "Quis", "Sossega", "Fui", "Se", "Tendo", "Ideal", "Tão",
+    "Ordem", "Estão", "Pois", "Quanto", "Tu", "Queira", "Tinha", "Terminada",
+    "Coisa", "Todos", "Tornar", "Fará", "Contacto", "Nada", "Os", "As", "Para");
 
 # regex to find the left and right side (the $center is for all names)
-#my $left   = qr[(?<=\b(.{21}))];
 my $np     = qr[(\{.*?\})];
 my $left   = qr[([ \w{}]+){1,5}];
 my $right  = qr[(?=(([ \w{}]+){1,5}))];
 
 # var with the output file
-my $files = 'output.dot';
+my $fileGraph = 'output.dot';
+my $fileHisto = 'demo.dat';
 my $OUTFILE;
 
 while(<>){
     while(/$np$left\{$wanted\}$right/g){
-      print("-------------------------------------------------\n");
-      print("Left = '$1 $2' \nCenter = '$wanted'\nRight = '$3'\n");
-      print("Original Phrase: $1 $2 $wanted $3\n");
-      print("\$1: $1\n\$2: $2\n\$3: $3\n");
-      print("-------------------------------------------------\n");
       findNames($1);
       findNames($3);
     }
 }
 
-# write in a file
-if (-f $files) {
-    unlink $files
-}
+writeFile($fileGraph, 1);
+writeFile($fileHisto, 0);
 
-open $OUTFILE, '>>', $files;
-
-print { $OUTFILE }("digraph G {\n");
-
-for(sort{$names{$a} <=> $names{$b}} keys %names){
-    print{ $OUTFILE }("\t$wanted -> $_;\n");
-}
-
-print { $OUTFILE }("}\n");
-
-close $OUTFILE;
-
-
-# FUNCTIONS
+##### FUNCTIONS ######
 
 sub findNames{
     my $words = shift;
-    print("Phrase:\t$words\n\n");
 
     if($words =~ /$np/g){
-        print("-> Find:\t$1\n\n");
         $names{$1}++;
     }
-
     return;
 }
 
+sub writeFile{
+    my $file = shift;
+    my $isGraph = shift;
+
+    if (-f $file) {
+        unlink $file
+    }
+
+    open $OUTFILE, '>>', $file;
+
+    if($isGraph){
+        print { $OUTFILE }("digraph G {\n");
+
+        for(sort{$names{$a} <=> $names{$b}} keys %names){
+            print{ $OUTFILE }("\t$wanted -> $_;\n");
+        }
+
+        print { $OUTFILE }("}\n");
+    }
+    else{
+        my $i = 0;
+        foreach my $name (keys %names){
+            print{ $OUTFILE }("$i\t\t$name\t\t$names{$name}\n");
+            $i = $i + 1;
+        }
+    }
+    close $OUTFILE;
+}
 
 ## Man instructions
 
