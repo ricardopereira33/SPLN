@@ -46,10 +46,9 @@ writeFile($fileHisto, 0);
 sub findNames{
     my $words = shift;
 
-    if($words =~ /$np/g){
+    if(($words =~ /$np/g) and not(grep {$1 eq $_} @failed)){
         $names{$1}++;
     }
-    return;
 }
 
 sub writeFile{

@@ -9,6 +9,7 @@ $/ = ''; # processar paragrafo a paragrafo
 
 # Mapa com o relacionamento de toda a gente
 my %names;
+
 # lists failed names
 my @failed = ("Em", "Aquela", "Lá", "Isto", "Duas", "Chamava", "Ao",
     "Verão", "Assim", "Bem", "Era", "Eis", "Foi", "Aí", "Vi", "Uma",
@@ -41,15 +42,14 @@ sub addRelation {
     $a =~ s/[{}]//g;
     $b =~ s/[{}]//g;
 
-    if (not((any {$a eq $_} @failed) or (any {$b eq $_} @failed))) {
-	    print ("$a <--> $b\n");
+    if (not((grep {$a eq $_} @failed) or (grep {$b eq $_} @failed))) {
+        #print ("$a <--> $b\n");
 	    $names{$a}{$b}++;
-    }else{
-        print("a: $a\t_: $_\n");
     }
 }
 
-# GENERATES GRAPH
+#### GENERATES GRAPH ####
+
 if (-f $files) {
     unlink $files
 }
@@ -67,8 +67,6 @@ foreach my $name (sort keys %names) {
 print { $OUTFILE }("}\n");
 
 close $OUTFILE;
-
-
 
 ## Man instructions
 
