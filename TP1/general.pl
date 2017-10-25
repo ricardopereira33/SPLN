@@ -7,12 +7,12 @@ use List::MoreUtils qw(any);
 
 $/ = ''; # processar paragrafo a paragrafo
 
-# Mapa com o relacionamento de toda a gente 
+# Mapa com o relacionamento de toda a gente
 my %names;
 # lists failed names
-my @failed = ("Em", "Aquela", "Lá", "Isto", "Duas", "Chamava", 
+my @failed = ("Em", "Aquela", "Lá", "Isto", "Duas", "Chamava",
     "Verão", "Assim", "Bem", "Era", "Eis", "Foi", "Aí", "Vi",
-    "Lembrou-se", "Onde", "Dois", "Meu", "Isso", "Eu", "Limitamo-nos", 
+    "Lembrou-se", "Onde", "Dois", "Meu", "Isso", "Eu", "Limitamo-nos",
     "Dizendo-me", "No", "Não", "Quem", "Perdão", "Prato", "Ouvira", "Que",
     "Atirem", "Já", "Quis", "Sossega", "Fui", "Se", "Tendo", "Ideal", "Tão",
     "Ordem", "Estão", "Pois", "Quanto", "Tu", "Queira", "Tinha", "Terminada",
@@ -42,17 +42,17 @@ while (<>){
 sub addRelation {
     my $a = shift;
     my $b = shift;
-   
+
     $a =~ s/[{}]//g;
     $b =~ s/[{}]//g;
-    
+
     if (not((any {$a eq $_} @failed) or (any {$b eq $_} @failed))) {
-	print ("$a <--> $b\n");
-	$names{$a}{$b}++;
-    } 
+	    print ("$a <--> $b\n");
+	    $names{$a}{$b}++;
+    }
 }
 
-# GENERATES GRAPH 
+# GENERATES GRAPH
 if (-f $files) {
     unlink $files
 }
