@@ -80,29 +80,29 @@ sub writeFile{
     close $OUTFILE;
 }
 
-## Man instructions
+#### Man instructions ####
 
 __END__
 =head1 NAME
 
-TP1
+relation -- relation a gived name with others names for a specific distance of words
 
 =head1 SYNOPSIS
 
-    tp1.pl input.txt
+    relation [name] [file]
 
 =head1 DESCRIPTION
 
-Regista todos os nomes anotados numa vizinhança de k caracteres.
+Register all own names for a specific distance of words. The input file most be annotated.
 
 =head2 DEPENDENCIES
-Chart::OFC2
 
 =head2 EXPORT
 
 =head1 HISTORY
 
 =head1 SEE ALSO
+gnuplot(1), dot(1)
 
 =head1 AUTHOR
 

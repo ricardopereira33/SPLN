@@ -7,7 +7,7 @@ use List::MoreUtils qw(any);
 
 $/ = ''; # processar paragrafo a paragrafo
 
-# Mapa com o relacionamento de toda a gente
+# Map with o relacionamento de toda a gente
 my %names;
 
 # lists failed names
@@ -43,7 +43,6 @@ sub addRelation {
     $b =~ s/[{}]//g;
 
     if (not((grep {$a eq $_} @failed) or (grep {$b eq $_} @failed))) {
-        #print ("$a <--> $b\n");
 	    $names{$a}{$b}++;
     }
 }
@@ -68,7 +67,7 @@ print { $OUTFILE }("}\n");
 
 close $OUTFILE;
 
-## Man instructions
+#### Man instructions ####
 
 __END__
 =head1 NAME
@@ -84,7 +83,6 @@ TP1
 Regista todos os nomes anotados numa vizinhança de k caracteres.
 
 =head2 DEPENDENCIES
-Chart::OFC2
 
 =head2 EXPORT
 
