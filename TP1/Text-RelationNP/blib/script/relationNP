@@ -1,5 +1,8 @@
 #!/usr/bin/perl -s
 
+eval 'exec /usr/bin/perl -s -S $0 ${1+"$@"}'
+    if 0; # not running under some shell
+
 our ($alpha);
 use strict;
 use utf8::all;
@@ -124,9 +127,9 @@ sub writeFile{
     open $OUTFILE, '>>', $file;
 
     switch($isGraph){
-        case 0  {   my $i = 0;
+        case 0  {   my $i = 1;
                     foreach my $name (keys %names){
-                        print{ $OUTFILE }("$i\t\t$name\t\t$names{$name}\n");
+                        print{ $OUTFILE }("$i\t\t\"$name\"\t\t$names{$name}\n");
                         $i = $i + 1;
                     }
                 }
@@ -199,7 +202,7 @@ To display the help menu, type
 The output file is "graph.dot" to compile this into a pdf file run
     dot -Tpdf graph.dot > a.pdf
 
-Finally, with option r, you can't plot a histogram with the number of ocorrences. To do this just run
+Finally, with option r, you can plot a histogram with the number of ocorrences. To do this just run
     gnuplot plotconfig
 
 =head2 DEPENDENCIES

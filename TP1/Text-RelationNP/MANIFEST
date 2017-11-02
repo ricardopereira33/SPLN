@@ -1,0 +1,5 @@
+Makefile.PL
+MANIFEST
+README
+t/Text-RelationNP.t
+lib/Text/RelationNP.pm
