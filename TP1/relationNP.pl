@@ -92,9 +92,12 @@ else{
 
 sub findNames{
     my $words = shift;
+    my $aux;
 
     if(($words =~ /$np/g) and not(grep {$1 eq $_} @failed)){
-        $names{$1}++;
+	$aux = $1;
+	$aux =~ s/[{}]//g;
+        $names{$aux}++;
     }
 }
 
@@ -131,7 +134,7 @@ sub writeFile{
         case 1  {   print { $OUTFILE }("digraph G {\n");
 
                     for(sort{$names{$a} <=> $names{$b}} keys %names){
-                        print{ $OUTFILE }("\t$wanted -> $_;\n");
+                        print{ $OUTFILE }("\t$wanted -> \"$_\";\n");
                     }
 
                     print { $OUTFILE }("}\n");
@@ -157,15 +160,15 @@ sub printHelpMenu{
     print "\nUsage:\trelationNP [option g] [window size] [file]\n";
     print "\trelationNP [option r] [window size] [name] [file]\n";
     print "\nOptions: \n";
-    print "g :\tscan a input and find all realtion between NP\n";
-    print "r :\tscan a input and find all realtion with the given name\n";
+    print "g :\tscans an input file and finds all realtions between all NPs\n";
+    print "r :\tscans an input file and finds all realtion with a given name\n";
     print "h :\tlist available command line options\n";
     print "\nWindow size: \n";
-    print "\tSize of the window where catch others NP.\n";
+    print "\tSize of the window (in number of words) where to catch other NPs.\n";
     print "\nName: \n";
     print "\tThe name that is searched for.\n";
     print "\nFile: \n";
-    print "\tName of an input file.\n"
+    print "\tName of the input file.\n"
 }
 
 #### Man instructions ####
@@ -183,7 +186,22 @@ relation -- relation a gived name with others names for a specific distance of w
 
 Register all own names for a specific distance of words. The input file most be annotated.
 
+=head2 USAGE
+    relationNP [option] [args...] [filename]
+
+Take note that "filename" must be an annotated file. To do this just run
+    anotarNP [filename] > anotated_file.txt 
+
+To display the help menu, type
+    ralationNP h
+
+The output file is "graph.dot" to compile this into a pdf file run
+    dot -Tpdf graph.dot > a.pdf
+
 =head2 DEPENDENCIES
+    Switch
+    Filter::Util::Call
+    Text::Balanced 
 
 =head2 EXPORT
 

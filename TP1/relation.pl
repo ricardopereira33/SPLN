@@ -47,6 +47,8 @@ sub findNames{
     my $words = shift;
 
     if(($words =~ /$np/g) and not(grep {$1 eq $_} @failed)){
+
+	$1 =~ s/[{}]//g;
         $names{$1}++;
     }
 }
@@ -65,7 +67,7 @@ sub writeFile{
         print { $OUTFILE }("digraph G {\n");
 
         for(sort{$names{$a} <=> $names{$b}} keys %names){
-            print{ $OUTFILE }("\t$wanted -> $_;\n");
+            print{ $OUTFILE }("\t$wanted -> \"$_\";\n");
         }
 
         print { $OUTFILE }("}\n");
