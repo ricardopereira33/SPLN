@@ -72,7 +72,7 @@ close $OUTFILE;
 __END__
 =head1 NAME
 
-TP1
+general
 
 =head1 SYNOPSIS
 

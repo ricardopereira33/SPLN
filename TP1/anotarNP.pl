@@ -30,4 +30,3 @@ sub normaliza {
         return $p;
     }
 }
-
