@@ -41,7 +41,7 @@ if ( ($#ARGV + 1) < 1 ) {
 }
 else{
     switch($ARGV[0]){
-        case "h"    { print "h"; 
+        case "h"    { printHelpMenu();
                       exit;
                     } 
         case "g"    { shift;
@@ -148,9 +148,24 @@ sub writeFile{
                     print { $OUTFILE }("}\n");
                 }
 
-        else    { print "Error"; }
+        else    { print "Error\n"; }
     }
     close $OUTFILE;
+}
+
+sub printHelpMenu{
+    print "\nUsage:\trelationNP [option g] [window size] [file]\n";
+    print "\trelationNP [option r] [window size] [name] [file]\n";
+    print "\nOptions: \n";
+    print "g :\tscan a input and find all realtion between NP\n";
+    print "r :\tscan a input and find all realtion with the given name\n";
+    print "h :\tlist available command line options\n";
+    print "\nWindow size: \n";
+    print "\tSize of the window where catch others NP.\n";
+    print "\nName: \n";
+    print "\tThe name that is searched for.\n";
+    print "\nFile: \n";
+    print "\tName of an input file.\n"
 }
 
 #### Man instructions ####
