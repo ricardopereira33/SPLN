@@ -95,8 +95,8 @@ sub findNames{
     my $aux;
 
     if(($words =~ /$np/g) and not(grep {$1 eq $_} @failed)){
-	$aux = $1;
-	$aux =~ s/[{}]//g;
+        $aux = $1;
+        $aux =~ s/[{}]//g;
         $names{$aux}++;
     }
 }
@@ -176,11 +176,11 @@ sub printHelpMenu{
 __END__
 =head1 NAME
 
-relation -- relation a gived name with others names for a specific distance of words
+relationNP -- relation names with others names for a specific distance of words
 
 =head1 SYNOPSIS
 
-    relation [name] [file]
+    relationNP [option g|r|h] [window size] [name] [file]
 
 =head1 DESCRIPTION
 
@@ -193,10 +193,13 @@ Take note that "filename" must be an annotated file. To do this just run
     anotarNP [filename] > anotated_file.txt 
 
 To display the help menu, type
-    ralationNP h
+    relationNP h
 
 The output file is "graph.dot" to compile this into a pdf file run
     dot -Tpdf graph.dot > a.pdf
+
+Finally, with option r, you can't plot a histogram with the number of ocorrences. To do this just run
+    gnuplot plotconfig
 
 =head2 DEPENDENCIES
     Switch
