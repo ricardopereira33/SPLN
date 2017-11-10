@@ -1,0 +1,6 @@
+digraph G {
+	Brasil -> "Se";
+	Brasil -> "Novembro";
+	Brasil -> "Parti";
+	Brasil -> "Ricardo Reis";
+}
