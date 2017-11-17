@@ -11,14 +11,15 @@ my $question;
 
 my $string = join ("", <>);
 
-if ($string =~ s/> (.*?)//) {
+if ($string =~ s/> (.*)//) {
     $topic = $1;
 }
 
-if ($string =~ /(.*?)\s*>\s*(.*?)\s*<\s*(.*)?/g) {
+if ($string =~ /((.|\\\n)*?)\s*>\s*(.*?)\s*<\s*(.*)?/g) {
     $question = $1;
-    $optans = $2;
-    $txtans = $3;
+    $optans = $3;
+    $txtans = $4;
+    $question =~ s/\\\n/<br>/g;
 }
 
 while ($string =~ s/(.*?)\s*=\s*(.*)//) {
