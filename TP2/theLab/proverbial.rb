@@ -13,7 +13,7 @@ end
 
 def get_keywords(phrase)
   tokens = phrase.split
-  tokens.delete_if { |tkn| tkn.match(/\b(d[aeo]|[aeo]|com|[àao]+s|para|em|és?)\b/)}
+  tokens.delete_if { |tkn| tkn.match(/\b(d[aeo]|[aeo]|com|[àao]+s|para|em|és?|uma?|[et]u)\b/)}
 end
 
 def relevant_proverb(phrase, proverbs)
