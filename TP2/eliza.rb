@@ -229,7 +229,7 @@ def get_response(sentence)
      "Olá, como estás?"]
 
   when /Bom dia$/;
-    ["Bom %s!",
+    ["Bom dia!",
      "Olá"]
 
   when /Boa (noite|tarde)$/;
