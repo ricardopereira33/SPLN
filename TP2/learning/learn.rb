@@ -2,7 +2,8 @@
 
 Knowledge = {}
 Relation = /é|gosta|criado|derivado|codifica/
-W = /[éãâóàáõ\w]/
+L = /[éãâóàáõ\w]+/
+W = /[oa]s? #{L}/
 
 def reflector(word)
   sub = case word
@@ -63,20 +64,29 @@ def putTriple(triple)
     elem = Knowledge[triple[0]]
     if elem[triple[1]].nil?
       elem[triple[1]] = []
-      elem[triple[1]].push(triple[2])
-      "Não sabia... obrigado por me informares"
+      unknown(triple, elem)
     else
       if elem[triple[1]].include?(triple[2])
         "Já sabia"
       else
-        elem[triple[1]].push(triple[2])
-        "Não sabia... obrigado por me informares"
+        unknown(triple, elem)
       end
     end
   else
-    newTriple(triple)
+    newTripleRegistrable(triple)
     "Não sabia... obrigado por me informares"
   end
+end
+
+def unknown(triple, elem)
+  elem[triple[1]].push(triple[2])
+  registFact(triple, "knowledge.info")
+  "Não sabia... obrigado por me informares"
+end
+
+def newTripleRegistrable(t)
+  newTriple(t)
+  registFact(t, "knowledge.info")
 end
 
 def newTriple(t)
@@ -85,16 +95,28 @@ def newTriple(t)
   Knowledge[t[0]][t[1]].push(t[2])
 end
 
-def get_response(sentence)
-  rep = case sentence
-        when /[Ss]abias que (.*)\?/;  verifyKnowledge($1)
-        when /Aprende que (.*)/;      verifyKnowledge($1)
-        else;                         return "Desconheço"
-  end
-
-  rep
+def getFact()
+  fstPronouns = Knowledge.keys
+  fstPronoun = fstPronouns.sample
+  relations = Knowledge[fstPronoun].keys
+  relation = relations.sample
+  sndPronoun = Knowledge[fstPronoun][relation].sample
+  responses = ["Sabias que #{fstPronoun} #{relation} #{sndPronoun}?",
+               "Um facto: #{fstPronoun} #{relation} #{sndPronoun}!"]
+  responses.sample
 end
 
+def get_response(sentence)
+  rep = case sentence
+        when /[Ss]abias que (.*)\?|Aprende que (.*)/;
+          verifyKnowledge($1)
+        when /O que sabes\?|Conta-me algo/;
+          getFact()
+        else;
+          return "Desconheço"
+  end
+  rep
+end
 
 def analyze(statement)
   puts get_response(statement)
@@ -104,11 +126,17 @@ end
 def loadFile(fileName)
   File.open(fileName, "r") do |f1|
     while line = f1.gets
-      if match = line.match(/(#{W}+)\s+- (#{W}+)\s+- (#{W}+)/)
+      if match = line.match(/(#{W})\s+- (#{W})\s+- (#{W})/)
         g1, g2, g3 = match.captures
         newTriple([g1, g2, g3])
       end
     end
+  end
+end
+
+def registFact(fact, fileName)
+  File.open(fileName, "a") do |f2|
+    f2.puts "#{fact[0]}\t- #{fact[1]}\t- #{fact[2]}"
   end
 end
 
