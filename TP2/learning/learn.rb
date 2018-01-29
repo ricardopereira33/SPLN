@@ -1,16 +1,22 @@
 #require 'Regexp'
 
+# Hash with all knowledge
 Knowledge = {}
+
+# Regex for Triple
 Verb = /é|gosta|criado|derivado|codifica/
 Not = /não/
-Relation = /#{Not}?#{Verb}/
+Conj = /#{Not}?#{Verb}/
+Relation = /(.*) (#{Conj}) (.*)/
+
+# Regex for Word
 L = /[éãâóàáõ\w]+/
-D = /[oa]s? /
+D = /[oOaA]s? |[Uu]ma? |[Dd][eao] /
 W = /#{D}?#{L}/
 
 def verifyKnowledge(fact)
   triple = case fact
-           when /(.*) (#{Relation}) (.*)/;
+           when Relation;
              [$1, $2, $3]
            else;
              nil
@@ -43,9 +49,7 @@ end
 
 def unknown(triple, elem, isRegistrable)
   elem[triple[1]].push(triple[2])
-  if isRegistrable
-    registFact(triple, "knowledge.info")
-  end
+  registFact(triple, "knowledge.info") if isRegistrable
   "Não sabia... obrigado por me informares"
 end
 
@@ -53,12 +57,10 @@ def newTriple(t, isRegistrable)
   Knowledge[t[0]] = {}
   Knowledge[t[0]][t[1]] = []
   Knowledge[t[0]][t[1]].push(t[2])
-  if isRegistrable
-    registFact(t, "knowledge.info")
-  end
+  registFact(t, "knowledge.info")  if isRegistrable
 end
 
-def getFact()
+def getFactRandom()
   fstPronouns = Knowledge.keys
   fstPronoun = fstPronouns.sample
   relations = Knowledge[fstPronoun].keys
@@ -69,12 +71,29 @@ def getFact()
   responses.sample
 end
 
+def getFact(verb, pronoun)
+  unless Knowledge[pronoun].nil?
+    unless Knowledge[pronoun][verb].nil?
+    pronoun2 = Knowledge[pronoun][verb].sample
+    "#{pronoun} #{verb} #{pronoun2}"
+    else
+      "Não sei"
+    end
+  else
+    "Não sei"
+  end
+end
+
 def get_response(sentence)
   rep = case sentence
         when /[Ss]abias que (.*)\?|Aprende que (.*)/;
           verifyKnowledge($1)
         when /O que sabes\?|Conta-me algo/;
-          getFact()
+          getFactRandom()
+        when /O que (#{Conj}) (#{W})\?/;
+          getFact($1, $2)
+        when /O que é que (#{W}) (#{Conj})\?/;
+          getFact($2, $1)
         else;
           return "Desconheço"
   end
