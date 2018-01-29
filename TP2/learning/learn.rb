@@ -1,49 +1,12 @@
 #require 'Regexp'
 
 Knowledge = {}
-Relation = /é|gosta|criado|derivado|codifica/
+Verb = /é|gosta|criado|derivado|codifica/
+Not = /não/
+Relation = /#{Not}?#{Verb}/
 L = /[éãâóàáõ\w]+/
-W = /[oa]s? #{L}/
-
-def reflector(word)
-  sub = case word
-  when /\beu\b/;            'tu'
-  when /\btu\b/;            'eu'
-
-  # Verbos irregulares
-  when /\bsou\b/;           'és'
-  when /\bvou\b/;           'vais'
-  when /\bés\b/;            'sou'
-  when /\bestou\b/;         'estás'
-  when /\btenho\b/;         'tens'
-  when /\bsei\b/;           'sabes'
-  when /\bsabes\b/;         'sei'
-
-  #Conjugação de verbos
-  when /[^aeiou]tive/;      'tiveste'
-  when /([^r]|rr)ei/;       '\1aste'
-  when /([^ ]+)rei/;        '\1rás'
-  when /(.*)ia/;            '\1ias'
-  when /(.*)ito/;           '\1itas'
-  when /ero/;               'eres'
-  when /ias/;               'ia'
-  when /ava/;               'avas'
-  when /ens/;               'enho'
-
-  # Possesivos
-  when /\bteu\b/;           'meu'
-  when /\btua\b/;           'minha'
-  when /\bmeu\b/;           'teu'
-  when /\bminha\b/;         'tua'
-  when /\bme\b/;            'te'
-  when /\bti\b/;            'mim'
-  else;                  return word
-  end
-
-  unless $~.nil?
-    word.gsub($~.regexp, sub)
-  end
-end
+D = /[oa]s? /
+W = /#{D}?#{L}/
 
 def verifyKnowledge(fact)
   triple = case fact
@@ -126,9 +89,9 @@ end
 def loadFile(fileName)
   File.open(fileName, "r") do |f1|
     while line = f1.gets
-      if match = line.match(/(#{W})\s+- (#{W})\s+- (#{W})/)
-        g1, g2, g3 = match.captures
-        newTriple([g1, g2, g3])
+      case line
+      when /(#{W})\s+- (#{W})\s+- (#{W})/;
+        putTriple([$1, $2, $3])
       end
     end
   end
@@ -142,6 +105,7 @@ end
 
 if __FILE__ == $0
   loadFile("knowledge.info")
+  puts Knowledge
   loop do
     print "> "
     line = gets.chomp
