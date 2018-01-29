@@ -15,10 +15,10 @@ def verifyKnowledge(fact)
            else;
              nil
   end
-  putTriple(triple)
+  putTriple(triple, true)
 end
 
-def putTriple(triple)
+def putTriple(triple, isRegistrable)
   if triple.nil?
     return "Não sei o que dizes"
   end
@@ -27,35 +27,35 @@ def putTriple(triple)
     elem = Knowledge[triple[0]]
     if elem[triple[1]].nil?
       elem[triple[1]] = []
-      unknown(triple, elem)
+      unknown(triple, elem, isRegistrable)
     else
       if elem[triple[1]].include?(triple[2])
         "Já sabia"
       else
-        unknown(triple, elem)
+        unknown(triple, elem, isRegistrable)
       end
     end
   else
-    newTripleRegistrable(triple)
+    newTriple(triple, isRegistrable)
     "Não sabia... obrigado por me informares"
   end
 end
 
-def unknown(triple, elem)
+def unknown(triple, elem, isRegistrable)
   elem[triple[1]].push(triple[2])
-  registFact(triple, "knowledge.info")
+  if isRegistrable
+    registFact(triple, "knowledge.info")
+  end
   "Não sabia... obrigado por me informares"
 end
 
-def newTripleRegistrable(t)
-  newTriple(t)
-  registFact(t, "knowledge.info")
-end
-
-def newTriple(t)
+def newTriple(t, isRegistrable)
   Knowledge[t[0]] = {}
   Knowledge[t[0]][t[1]] = []
   Knowledge[t[0]][t[1]].push(t[2])
+  if isRegistrable
+    registFact(t, "knowledge.info")
+  end
 end
 
 def getFact()
@@ -91,7 +91,7 @@ def loadFile(fileName)
     while line = f1.gets
       case line
       when /(#{W})\s+- (#{W})\s+- (#{W})/;
-        putTriple([$1, $2, $3])
+        putTriple([$1, $2, $3], false)
       end
     end
   end
