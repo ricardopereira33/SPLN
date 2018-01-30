@@ -1,7 +1,8 @@
 #require 'Regexp'
 
-# Hash with all knowledge
+# Vars
 Knowledge = {}
+$person = "Person"
 
 # Regex for Triple
 Verb = /é|gosta|criado|derivado|codifica/
@@ -24,11 +25,22 @@ def verifyKnowledge(fact)
   putTriple(triple, true)
 end
 
+def whoIs(pronoun)
+  rep = case pronoun
+        when /el[ae]s?/;
+          $person
+        else;
+          $person = pronoun
+          pronoun
+  end
+  rep
+end
+
 def putTriple(triple, isRegistrable)
   if triple.nil?
     return "Não sei o que dizes"
   end
-
+  triple[0] = whoIs(triple[0])
   unless Knowledge[triple[0]].nil?
     elem = Knowledge[triple[0]]
     if elem[triple[1]].nil?
@@ -72,10 +84,11 @@ def getFactRandom()
 end
 
 def getFact(verb, pronoun)
-  unless Knowledge[pronoun].nil?
-    unless Knowledge[pronoun][verb].nil?
-    pronoun2 = Knowledge[pronoun][verb].sample
-    "#{pronoun} #{verb} #{pronoun2}"
+  person = whoIs(pronoun)
+  unless Knowledge[person].nil?
+    unless Knowledge[person][verb].nil?
+      pronoun2 = Knowledge[person][verb].sample
+      "#{pronoun} #{verb} #{pronoun2}"
     else
       "Não sei"
     end
