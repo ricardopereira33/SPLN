@@ -137,7 +137,6 @@ end
 
 if __FILE__ == $0
   loadFile("knowledge.info")
-  puts Knowledge
   loop do
     print "> "
     line = gets.chomp
