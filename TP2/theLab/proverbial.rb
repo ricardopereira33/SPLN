@@ -33,6 +33,8 @@ end
 def prepare_statement(statement)
   unless statement.nil?
     statement.gsub(/\(([^\)\|]*)\|([^\)\|]*)(\|.*)?\)/, "\\#{rand(1..2)}")
+  else 
+    ""
   end
 end
 

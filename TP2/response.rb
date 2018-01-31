@@ -49,12 +49,13 @@ def get_response(sentence)
   if learned.nil?
     num = rand(1..10)
     res = case num 
-      when 3;   return get_proverb(sentence) 
-      else;     return get_normalResponse(sentence).sample  
+      when 3;   get_proverb(sentence) 
+      else;     get_normalResponse(sentence).sample  
     end
-    p "1- #{res}" 
     return res if res.length > 0
-    return ["Fala-me mais sobre isso", "Como é que isso te faz sentir?"].sample
+    return ["Fala-me mais sobre isso", 
+            "Como é que isso te faz sentir?", 
+            "Não entendi o que disseste"].sample
   else
     learned
   end
@@ -135,69 +136,69 @@ def get_normalResponse(sentence)
   # Eu
     
   when /^Porque(?: é que)?(?: eu)? não consigo ([^\?])?/
-    ["Porque dizes que não consegues %s?",
-     "Achas que devias conseguir %s?",
-     "Tentaste realmente %s?"]
+    ["Porque dizes que não consegues #{$1}?",
+     "Achas que devias conseguir #{$1}?",
+     "Tentaste realmente #{$1}?"]
     
   when /^(?:Eu )?[Qq]uer(o|ia)(.+)?/;
-    ["Em que sentido %s te ajudava?",
+    ["Em que sentido #{$1} te ajudava?",
      "Porque é que queres isso?",
-     "Precisas mesmo de %s?",
-     "Achas que %s é necessário?"]
+     "Precisas mesmo de #{$1}?",
+     "Achas que #{$1} é necessário?"]
 
   when /^(?:Eu )?[Pp]reciso de (.+)$/;
-    ["Porque precisas de %s?",
-    "De que forma %s te ajudava?",
-    "Precisas mesmo de %s?"]
+    ["Porque precisas de #{$1}?",
+    "De que forma #{$1} te ajudava?",
+    "Precisas mesmo de #{$1}?"]
 
   when /^(?:Eu )?[Nn]ão consigo (.+)/;
-    ["Talvez se tentasses %s, conseguias.",
-     "Como achas que poderias %s?"]
+    ["Talvez se tentasses #{$1}, conseguias.",
+     "Como achas que poderias #{$1}?"]
 
   when /^(?:Eu )?[Ss]ou (.+)$/;
-    ["Porque dizes que és %s?",
-    "Como te sentes em ser %s?",
-    "Há quanto tempo és %s?"]
+    ["Porque dizes que és #{$1}?",
+    "Como te sentes em ser #{$1}?",
+    "Há quanto tempo és #{$1}?"]
 
   when /^(?:Eu )?[Ee]stou (.+)$/;
-    ["Porque dizes que estás %s?",
-    "Como te sentes em ser %s?",
-    "Há quanto tempo és %s?"]
+    ["Porque dizes que estás #{$1}?",
+    "Como te sentes em ser #{$1}?",
+    "Há quanto tempo és #{$1}?"]
 
   when /(?:Eu )?[Ss]into(?:-me)? (.*)/;
     ["Fala-me mais sobre esses sentimentos",
-     "Quantas vezes te sentes %s?",
-     "Gostas de te sentir %s?"]
+     "Quantas vezes te sentes #{$1}?",
+     "Gostas de te sentir #{$1}?"]
 
   when /(?:Eu )?[Gg]ostava (.*)/;
-    ["Porque é que gostavas %s?"]
+    ["Porque é que gostavas #{$1}?"]
 
   when /(?:Eu )?([Nn]ão )?[Gg]osto de (.*)/;
-    ["Eu também %sgosto de %s",
-     "Porque é que %sgostas de %s?"]
+    ["Eu também #{$1}gosto de #{$2}",
+     "Porque é que #{$1}gostas de #{$2}?"]
 
   when /(?:Eu )?(?:[Aa]cho|[Pp]enso) (.+)/;
-    ["Duvidas %s?",
+    ["Duvidas #{$1}?",
     "Tens a certeza?"]
 
   when /Eu ?(.*)/;
     ["Porquê?", 
-     "Porque é que %s?",
+     "Porque é que #{$1}?",
      "Achas que isso te define?"]
 
   # Tu ...
 
   when /^Porque não te ([^\?]*)\?/;
     ["Talvez o faça",
-     "Achas mesmo que eu devia %s"]
+     "Achas mesmo que eu devia #{$1}"]
 
   when /^(?:Tu ) ([^\?]*)\?/;
     ["Precisamos de falar sobre mim?",
      "Preferia falar sobre ti",
-     "Achas mesmo que %s?"]
+     "Achas mesmo que #{$1}?"]
 
   when /^(?:Tu ) (.*)/;
-    ["Porque é que dizes que %s?",
+    ["Porque é que dizes que #{$1}?",
      "Porque dizes isso?",
      "Eu sinto-me bem comigo."]
 
@@ -219,19 +220,19 @@ def get_normalResponse(sentence)
      "Tens a certeza disso?",
      "Que outras razões podem ser?",
      "Essa razão aplica-se a mais alguma coisa?",
-     "Se %s, que mais podia ser verdade?"]
+     "Se #{$1}, que mais podia ser verdade?"]
 
   when /^Não [^\?]*\?/;
-    ["Porque dizes que não %s?",
+    ["Porque dizes que não #{$1}?",
      "Não sabes a resposta a essa pergunta?"]
 
   when /^São (.*)/;
-    ["Porque dizes que são %s?",
-     "Achas mesmo que são %s?"]
+    ["Porque dizes que são #{$1}?",
+     "Achas mesmo que são #{$1}?"]
 
   when /(?:A mim )?(.*)-me (.*)/;
-    ["Porque é que te %s %s?",
-     "De que maneira te %s %s?"]
+    ["Porque é que te #{$1} #{$2}?",
+     "De que maneira te #{$1} #{$2}?"]
 
   when /Sim/;
     ["Pareces muito certo",
@@ -252,22 +253,21 @@ def get_normalResponse(sentence)
      "Em que sentido?"]
 
   when /^Eu (.*)/; 
-    [ "Como é que %s?", 
+    [ "Como é que #{$1}?", 
       "Porquê?" ]
 
   when /^(?:É|E)s ([^\?])*\?/;
-    ["Porque é que é importante se seja %s?",
-     "Preferias que não fosse %s?",
+    ["Porque é que é importante se seja #{$1}?",
+     "Preferias que não fosse #{$1}?",
      "Achas que sou?"]
     
   when /^(?:É|E)s ([^\?])*/;
-    ["Porque é que é dizes que sou %s?",
-     "Preferias que não fosse %s?",
+    ["Porque é que é dizes que sou #{$1}?",
+     "Preferias que não fosse #{$1}?",
      "Podemos falar sobre ti?"]
 
   when /Ol(á|a).*/;
     ["Olá",
-     "Bom dia!",
      "Olá, como estás?"]
 
   when /Bom dia$/;
@@ -275,14 +275,14 @@ def get_normalResponse(sentence)
      "Olá"]
 
   when /Boa (noite|tarde)$/;
-    ["Boa %s!",
+    ["Boa #{$1}!",
      "Olá"]
 
   when /Não(.*)/;
     ["Porque não?"]
 
   when /(.*)!/;
-    ["Claro que %s", 
+    ["Claro que #{$1}", 
      "Achas mesmo isso?"]
 
   when /.*\.\.\.$/;
