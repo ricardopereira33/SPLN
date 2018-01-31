@@ -38,15 +38,57 @@ def reflector(word)
   else;                  return word
   end
 
-
   unless $~.nil?
     word.gsub($~.regexp, sub)
   end
 end
 
 def get_response(sentence)
+  learned = isLearning(sentence)
+
+  if learned.nil?
+    num = rand(1..10)
+    res = case num 
+      when 3;   return get_proverb(sentence) 
+      else;     return get_normalResponse(sentence).sample  
+    end
+    p "1- #{res}" 
+    return res if res.length > 0
+    return ["Fala-me mais sobre isso", "Como é que isso te faz sentir?"].sample
+  else
+    learned
+  end
+end
+
+def isLearning(sentence)
   rep = case sentence
 
+  when /[Ss]abias que (.*)\?|Aprende que (.*)/;
+    verifyKnowledge($1)
+  
+  when /O que sabes\?|Conta-me algo/;
+    getFactRandom()
+  
+  when /O que (#{Conj}) (#{W})\?/;
+    getFact($1, $2)
+  
+  when /O que é que (#{W}) (#{Conj})\?/;
+    getFact($2, $1)
+
+  else;
+    nil
+  end
+  rep
+end
+
+def get_proverb(sentence)
+  ps  = relevant_proverb(sentence)
+  res = prepare_statement(ps.sample)
+  res
+end
+
+def get_normalResponse(sentence)
+  rep = case sentence
 
   when Despedida;
     ["Adeus, gostei de falar contigo",
@@ -252,36 +294,16 @@ def get_response(sentence)
     ["O que queres realmente saber?", 
      "Não pareces muito seguro...",
      "Queres mesmo que te responda a isso?"]
-
-  else; return ["Fala-me mais sobre isso",
-                "Como é que isso te faz sentir?"]
+  else; 
+    [""]
   end
 
-  rep.map do |s|
-    s % $~[1..10].map { |m| reflector(m)&.downcase }
-  end
-end
-
-def analyze(statement)
-  puts get_response(statement).sample
-  !(Despedida.match(statement))
-end
-
-def unthankful(line)
-  line.gsub(/(,)?( )*obrigad[oa]/, "")
-  line.gsub(/(,)?( )*[Pp]or [Ff]avor(, )?/, "")
-end
-
-if __FILE__ == $0
-  loop do
-    print "> "
-    line = gets.chomp
-    
-    line = unthankful(line)
-    print "< "
-
-    unless analyze(line.capitalize)
-      break
+  if rep[0].length > 0
+    rep.map do |s|
+      s % $~[1..10].map { |m| reflector(m)&.downcase }
     end
+    return rep
   end
+
+  return [""]
 end

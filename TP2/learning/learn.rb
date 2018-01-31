@@ -2,7 +2,6 @@
 
 # Vars
 Knowledge = {}
-$person = "Person"
 
 # Regex for Triple
 Verb = /é|gosta|criado|derivado|codifica/
@@ -61,7 +60,7 @@ end
 
 def unknown(triple, elem, isRegistrable)
   elem[triple[1]].push(triple[2])
-  registFact(triple, "knowledge.info") if isRegistrable
+  registFact(triple, "learning/knowledge.info") if isRegistrable
   "Não sabia... obrigado por me informares"
 end
 
@@ -69,7 +68,7 @@ def newTriple(t, isRegistrable)
   Knowledge[t[0]] = {}
   Knowledge[t[0]][t[1]] = []
   Knowledge[t[0]][t[1]].push(t[2])
-  registFact(t, "knowledge.info")  if isRegistrable
+  registFact(t, "learning/knowledge.info")  if isRegistrable
 end
 
 def getFactRandom()
@@ -97,22 +96,6 @@ def getFact(verb, pronoun)
   end
 end
 
-def get_response(sentence)
-  rep = case sentence
-        when /[Ss]abias que (.*)\?|Aprende que (.*)/;
-          verifyKnowledge($1)
-        when /O que sabes\?|Conta-me algo/;
-          getFactRandom()
-        when /O que (#{Conj}) (#{W})\?/;
-          getFact($1, $2)
-        when /O que é que (#{W}) (#{Conj})\?/;
-          getFact($2, $1)
-        else;
-          return "Desconheço"
-  end
-  rep
-end
-
 def analyze(statement)
   puts get_response(statement)
   statement.length > 0
@@ -132,18 +115,5 @@ end
 def registFact(fact, fileName)
   File.open(fileName, "a") do |f2|
     f2.puts "#{fact[0]}\t- #{fact[1]}\t- #{fact[2]}"
-  end
-end
-
-if __FILE__ == $0
-  loadFile("knowledge.info")
-  loop do
-    print "> "
-    line = gets.chomp
-
-    print "< "
-    unless analyze(line.capitalize)
-      break
-    end
   end
 end
