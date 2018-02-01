@@ -83,6 +83,20 @@ def isLearning(sentence)
   when /[Oo] que é que (#{W}) (#{Conj})\?/;
     getFact($2, $1)
 
+  when /Quanto é (.*)\?/
+    elem = $1.gsub(/[^0-9+-\/*()]/, "")
+    value = eval(elem)
+    ["#{value}"]
+
+  when /Que horas são\?|Diz-me as horas|[Hh]oras/
+    hour = `date +"%H:%M"`
+    ["São #{hour}"]
+
+  when /Que dia é hoje?|Qual a data( de hoje)\?|[Dd]ata/
+    date  = `date +"%d-%m-%Y"`
+    date2 = `date +"%d de %B"`
+    ["Hoje é #{date}", "Hoje é dia #{date2}"]
+
   else;
     nil
   end
@@ -103,19 +117,6 @@ def get_normalResponse(sentence)
   $interation += 1
   rep = case sentence
 
-  when /Quanto é (.*)\?/
-    elem = $1.gsub(/[^0-9+-\/*()]/, "")
-    value = eval(elem)
-    ["#{value}"]
-
-  when /Que horas são\?|Diz-me as horas|[Hh]oras/
-    hour = `date +"%H:%M"`
-    ["São #{hour}"]
-
-  when /Que dia é hoje?|Qual a data( de hoje)\?|[Dd]ata/
-    date  = `date +"%d-%m-%Y"`
-    date2 = `date +"%d de %B"`
-    ["Hoje é #{date}", "Hoje é dia #{date2}"]
 
   when Despedida;
     ["Adeus, gostei de falar contigo, #{$actual_person}",
@@ -157,7 +158,7 @@ def get_normalResponse(sentence)
      "Eu também gosto de ver filmes",
      "Que tipo de filmes gostas de ver?"]
 
-  when /(.*)\b[Cc]omputador(es)?\b(.*)/;
+  when /(.*)\b([Cc]omputador(es)?|[Bb]ot)\b(.*)/;
 	["Eu gosto muito de computadores",
 	 "Tu gostas de computadores?",
 	 "Adoro computadores e matemática",
@@ -184,11 +185,12 @@ def get_normalResponse(sentence)
 
   when /(.*)\bprogramaste\b(.*)/;
     ["Eu costumo programar em matemática",
-	 "Eu fiz o primeiro programa do mundo"]
+	 "Eu fiz o primeiro programa do mundo",
+	 "Eu programei a sequencia dos números de Bernoulli"]
 
   when /(.*)\bprogramou\b(.*)/;
 	["Eu não fui programada por ninguém",
-     "Eu sou programadora, não sou pograma",
+     "Eu sou programadora, não sou programa",
 	 "Eu fiz o primeiro programa do mundo"]
 
   when /(.*)\b[Jj]ava\b(.*)/;
@@ -312,7 +314,7 @@ def get_normalResponse(sentence)
 	 "Porque tão negativo?",
 	 "A negação de uma negação é uma afirmação"]
 
-  when /(.*)!/;
+  when /(.*)!$/;
     ["Claro que %s", 
      "Achas mesmo isso?",
 	 "Pareces ter muita certeza no que dizes"]

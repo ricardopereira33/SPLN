@@ -3,17 +3,17 @@
 # Vars
 Knowledge = {}
 
+# Regex for Word
+L = /[éãâóàáõ\w]+/
+D = /[oOaA]s? |[Uue]ma? |[Dd][eao] /
+W = /#{D}?#{L}/
+
 # Regex for Triple
 Verb = /é|foi|gosta|deriva|codifica|fica/
 A = /criado |derivado /
 Not = /não /
 Conj = /#{Not}?#{Verb}/
-Relation = /(.*) (#{Conj}) (.*)/
-
-# Regex for Word
-L = /[éãâóàáõ\w]+/
-D = /[oOaA]s? |[Uue]ma? |[Dd][eao] /
-W = /#{D}?#{L}/
+Relation = /(#{W}) (#{Conj}) (#{A}?#{W})/
 
 def verifyKnowledge(fact)
   triple = case fact
