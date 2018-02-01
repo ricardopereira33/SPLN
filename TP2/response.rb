@@ -97,6 +97,19 @@ def get_normalResponse(sentence)
   $interation += 1
   rep = case sentence
 
+  when /Quanto é (.*)\?/
+    elem = $1.gsub(/[^0-9+-\/*()]/, "")
+    value = eval(elem)
+    ["#{value}"]
+
+  when /Que horas são\?|Diz-me as horas|[Hh]oras/
+    hour = `date +%T`
+    ["#{hour}"]
+
+  when /Que dia é hoje?|Qual a data( de hoje)\?|[Dd]ata/
+    date = `date +%D`
+    ["#{date}"]
+
   when Despedida;
     ["Adeus, gostei de falar contigo",
      "Até à proxima",
