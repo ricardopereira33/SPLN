@@ -1,7 +1,7 @@
 #require 'Regexp'
 
 Despedida = /(.*)([Aa]deus|([Xx]au)|[Aa]té à proxima)(.*)/
-Profano = /(.*)([Mm]erda|[Ff]oda|[Pp]uta|[Cc]aralho|[Cc]abrão)(.*)/
+Profano = /(.*)([Mm]erda|[Ff]od[ae]|[Pp]uta|[Cc]aralho|[Cc]abrão)(.*)/
 
 def reflector(word)
   sub = case word
@@ -47,7 +47,7 @@ def get_response(sentence)
   learned = isLearning(sentence)
 
   if learned.nil?
-    num = rand(1..10)
+    num = rand(1..5)
     res = case num 
       when 3;   get_proverb(sentence) 
       else;     get_normalResponse(sentence).sample  
@@ -85,7 +85,8 @@ end
 def get_proverb(sentence)
   ps  = relevant_proverb(sentence)
   res = prepare_statement(ps.sample)
-  res
+  return res if res.length > 0
+  return get_normalResponse(sentence)
 end
 
 def get_normalResponse(sentence)
@@ -98,7 +99,7 @@ def get_normalResponse(sentence)
 
   when Profano;
     ["Peço que te acalmas",
-     "Tente na língua",
+     "Tento na língua",
      "Por favor, não vamos deixar sentimentos afetar a nossa linguagem"]
 
   when /(.*) desculpa (.*)/;
@@ -130,75 +131,75 @@ def get_normalResponse(sentence)
      "Eu também gosto de ver filmes",
      "Que tipo de filmes gostas de ver?"]
 
-  when /(.*)elisa,?(.*)/;
-    ["Desculpa, mas o meu nome é Eliza"]
+  when /(.*)ofelia(.*) |Quem és( tu)?\?/;
+    ["O meu nome é Ofelia, e sou uma jovem da alta nobreza da Dinamarca. Recentemente virei um bot."]
 
   # Eu
     
   when /^Porque(?: é que)?(?: eu)? não consigo ([^\?])?/
-    ["Porque dizes que não consegues #{$1}?",
-     "Achas que devias conseguir #{$1}?",
-     "Tentaste realmente #{$1}?"]
+    ["Porque dizes que não consegues %s?",
+     "Achas que devias conseguir %s?",
+     "Tentaste realmente %s?"]
     
   when /^(?:Eu )?[Qq]uer(o|ia)(.+)?/;
-    ["Em que sentido #{$1} te ajudava?",
+    ["Em que sentido %s te ajudava?",
      "Porque é que queres isso?",
-     "Precisas mesmo de #{$1}?",
-     "Achas que #{$1} é necessário?"]
+     "Precisas mesmo de %s?",
+     "Achas que %s é necessário?"]
 
   when /^(?:Eu )?[Pp]reciso de (.+)$/;
-    ["Porque precisas de #{$1}?",
-    "De que forma #{$1} te ajudava?",
-    "Precisas mesmo de #{$1}?"]
+    ["Porque precisas de %s?",
+    "De que forma %s te ajudava?",
+    "Precisas mesmo de %s?"]
 
   when /^(?:Eu )?[Nn]ão consigo (.+)/;
-    ["Talvez se tentasses #{$1}, conseguias.",
-     "Como achas que poderias #{$1}?"]
+    ["Talvez se tentasses %s, conseguias.",
+     "Como achas que poderias %s?"]
 
   when /^(?:Eu )?[Ss]ou (.+)$/;
-    ["Porque dizes que és #{$1}?",
-    "Como te sentes em ser #{$1}?",
-    "Há quanto tempo és #{$1}?"]
+    ["Porque dizes que és %s?",
+    "Como te sentes em ser %s?",
+    "Há quanto tempo és %s?"]
 
   when /^(?:Eu )?[Ee]stou (.+)$/;
-    ["Porque dizes que estás #{$1}?",
-    "Como te sentes em ser #{$1}?",
-    "Há quanto tempo és #{$1}?"]
+    ["Porque dizes que estás %s?",
+    "Como te sentes em ser %s?",
+    "Há quanto tempo és %s?"]
 
   when /(?:Eu )?[Ss]into(?:-me)? (.*)/;
     ["Fala-me mais sobre esses sentimentos",
-     "Quantas vezes te sentes #{$1}?",
-     "Gostas de te sentir #{$1}?"]
+     "Quantas vezes te sentes %s?",
+     "Gostas de te sentir %s?"]
 
   when /(?:Eu )?[Gg]ostava (.*)/;
-    ["Porque é que gostavas #{$1}?"]
+    ["Porque é que gostavas %s?"]
 
   when /(?:Eu )?([Nn]ão )?[Gg]osto de (.*)/;
-    ["Eu também #{$1}gosto de #{$2}",
-     "Porque é que #{$1}gostas de #{$2}?"]
+    ["Eu também %sgosto de #{$2}",
+     "Porque é que %sgostas de #{$2}?"]
 
   when /(?:Eu )?(?:[Aa]cho|[Pp]enso) (.+)/;
-    ["Duvidas #{$1}?",
+    ["Duvidas %s?",
     "Tens a certeza?"]
 
   when /Eu ?(.*)/;
     ["Porquê?", 
-     "Porque é que #{$1}?",
+     "Porque é que %s?",
      "Achas que isso te define?"]
 
   # Tu ...
 
   when /^Porque não te ([^\?]*)\?/;
     ["Talvez o faça",
-     "Achas mesmo que eu devia #{$1}"]
+     "Achas mesmo que eu devia %s"]
 
   when /^(?:Tu ) ([^\?]*)\?/;
     ["Precisamos de falar sobre mim?",
      "Preferia falar sobre ti",
-     "Achas mesmo que #{$1}?"]
+     "Achas mesmo que %s?"]
 
   when /^(?:Tu ) (.*)/;
-    ["Porque é que dizes que #{$1}?",
+    ["Porque é que dizes que %s?",
      "Porque dizes isso?",
      "Eu sinto-me bem comigo."]
 
@@ -220,19 +221,19 @@ def get_normalResponse(sentence)
      "Tens a certeza disso?",
      "Que outras razões podem ser?",
      "Essa razão aplica-se a mais alguma coisa?",
-     "Se #{$1}, que mais podia ser verdade?"]
+     "Se %s, que mais podia ser verdade?"]
 
   when /^Não [^\?]*\?/;
-    ["Porque dizes que não #{$1}?",
+    ["Porque dizes que não %s?",
      "Não sabes a resposta a essa pergunta?"]
 
   when /^São (.*)/;
-    ["Porque dizes que são #{$1}?",
-     "Achas mesmo que são #{$1}?"]
+    ["Porque dizes que são %s?",
+     "Achas mesmo que são %s?"]
 
   when /(?:A mim )?(.*)-me (.*)/;
-    ["Porque é que te #{$1} #{$2}?",
-     "De que maneira te #{$1} #{$2}?"]
+    ["Porque é que te %s #{$2}?",
+     "De que maneira te %s #{$2}?"]
 
   when /Sim/;
     ["Pareces muito certo",
@@ -253,17 +254,17 @@ def get_normalResponse(sentence)
      "Em que sentido?"]
 
   when /^Eu (.*)/; 
-    [ "Como é que #{$1}?", 
+    [ "Como é que %s?", 
       "Porquê?" ]
 
   when /^(?:É|E)s ([^\?])*\?/;
-    ["Porque é que é importante se seja #{$1}?",
-     "Preferias que não fosse #{$1}?",
+    ["Porque é que é importante se seja %s?",
+     "Preferias que não fosse %s?",
      "Achas que sou?"]
     
   when /^(?:É|E)s ([^\?])*/;
-    ["Porque é que é dizes que sou #{$1}?",
-     "Preferias que não fosse #{$1}?",
+    ["Porque é que é dizes que sou %s?",
+     "Preferias que não fosse %s?",
      "Podemos falar sobre ti?"]
 
   when /Ol(á|a).*/;
@@ -275,14 +276,14 @@ def get_normalResponse(sentence)
      "Olá"]
 
   when /Boa (noite|tarde)$/;
-    ["Boa #{$1}!",
+    ["Boa %s!",
      "Olá"]
 
   when /Não(.*)/;
     ["Porque não?"]
 
   when /(.*)!/;
-    ["Claro que #{$1}", 
+    ["Claro que %s", 
      "Achas mesmo isso?"]
 
   when /.*\.\.\.$/;
@@ -295,12 +296,13 @@ def get_normalResponse(sentence)
      "Não pareces muito seguro...",
      "Queres mesmo que te responda a isso?"]
   else; 
-    [""]
+    res = get_proverb(sentence)
+    [res]
   end
 
   if rep[0].length > 0
     rep.map do |s|
-      s % $~[1..10].map { |m| reflector(m)&.downcase }
+      s % $~[1..2]&.map { |m| reflector(m)&.downcase } unless $~.nil?
     end
     return rep
   end
