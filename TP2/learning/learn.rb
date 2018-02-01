@@ -4,14 +4,15 @@
 Knowledge = {}
 
 # Regex for Triple
-Verb = /é|gosta|criado|derivado|codifica|fica/
+Verb = /é|foi|gosta|deriva|codifica|fica/
+A = /criado |derivado /
 Not = /não /
 Conj = /#{Not}?#{Verb}/
 Relation = /(.*) (#{Conj}) (.*)/
 
 # Regex for Word
 L = /[éãâóàáõ\w]+/
-D = /[oOaA]s? |[Uu]ma? |[Dd][eao] /
+D = /[oOaA]s? |[Uue]ma? |[Dd][eao] /
 W = /#{D}?#{L}/
 
 def verifyKnowledge(fact)
@@ -105,7 +106,7 @@ def loadFile(fileName)
   File.open(fileName, "r") do |f1|
     while line = f1.gets
       case line
-      when /(#{W})\s+- (#{W})\s+- (#{W})/;
+      when /(#{W})\s+- (#{Conj})\s+- (#{A}?#{W})/;
         putTriple([$1, $2, $3], false)
       end
     end
