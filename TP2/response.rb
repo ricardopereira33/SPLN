@@ -1,7 +1,7 @@
 #require 'Regexp'
 
 Despedida = /(.*)([Aa]deus|([Xx]au)|[Aa]té à proxima)(.*)/
-Profano = /(.*)\b([Mm]erda|[Ff]od[ae]|[Pp]uta|[Cc]aralho|[Cc]abrão)\b(.*)/
+Profano = /(.*)\b([Mm]erda|[Ff]od[ae](sse)?|[Pp]uta|[Cc]aralho|[Cc]abrão)\b(.*)/
 Linguagem = /(?:.*)\b([Rr]uby|[Pp]erl|[Hh]askell|[Ee]rlang|[Jj]avascript)\b(?:.*)/
 $interation = 0
 
@@ -109,7 +109,7 @@ def get_normalResponse(sentence)
 
   when /Que dia é hoje?|Qual a data( de hoje)\?|[Dd]ata/
     date  = `date +"%d-%m-%Y"`
-    date2 = `date +"%d %b"`
+    date2 = `date +"%d de %B"`
     ["Hoje é #{date}", "Hoje é dia #{date2}"]
 
   when Despedida;
@@ -175,16 +175,21 @@ def get_normalResponse(sentence)
   when /(.*)\b[Jj]ava\b(.*)/;
 	["Tu gostas de Java?",
 	 "Eu não gosto nada de Java."]
-
+	
   when Linguagem;
 	["Gostas de %s?",
 	 "Que coisas interessantes fizeste em %s?",
 	 "Tens muita experiência em %s?"]
+
+  when /[Pp]orque(?: é que)? ([^?]*)\?/;
+	["Porque é que achas?",
+     "Também gostava de saber"]
   # Eu
     
   when /Eu sou (.*)/;
     ["Podes deixar de ser egocentrico?", 
-     "Vamos antes falar sobre mim?"]
+     "Vamos antes falar sobre mim?",
+	 "E eu sou a primeira programadora do mundo, por isso cala-te."]
 
   # Tu ...
 
