@@ -2,6 +2,7 @@
 
 Despedida = /(.*)([Aa]deus|([Xx]au)|[Aa]té à proxima)(.*)/
 Profano = /(.*)([Mm]erda|[Ff]od[ae]|[Pp]uta|[Cc]aralho|[Cc]abrão)(.*)/
+$interation = 0
 
 def reflector(word)
   sub = case word
@@ -52,6 +53,7 @@ def get_response(sentence)
       when 3;   get_proverb(sentence) 
       else;     get_normalResponse(sentence).sample  
     end
+    $interation = 0
     return res if res.length > 0
     return ["Fala-me mais sobre isso", 
             "Como é que isso te faz sentir?", 
@@ -83,13 +85,16 @@ def isLearning(sentence)
 end
 
 def get_proverb(sentence)
+  $interation += 1
   ps  = relevant_proverb(sentence)
   res = prepare_statement(ps.sample)
   return res if res.length > 0
-  return get_normalResponse(sentence)
+  return get_normalResponse(sentence).sample if $interation < 3
+  return ""
 end
 
 def get_normalResponse(sentence)
+  $interation += 1
   rep = case sentence
 
   when Despedida;
