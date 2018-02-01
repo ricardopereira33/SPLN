@@ -9,11 +9,21 @@ D = /[oOaA]s? |[Uue]ma? |[Dd][eao] /
 W = /#{D}?#{L}/
 
 # Regex for Triple
-Verb = /é|foi|gosta|deriva|codifica|fica/
+Verb = /é|sou|foi|fui|gosta|gosto|deriva|codifica|fica|fico/
 A = /criado |derivado /
 Not = /não /
 Conj = /#{Not}?#{Verb}/
 Relation = /(#{W}) (#{Conj}) (#{A}?#{W})/
+
+def verb3Person(verb)
+  case verb
+    when /gosto/;   'gosta'
+    when /sou/;     'é'
+    when /fui/;     'foi'
+    when /fico/;    'fica'
+    else;           verb
+  end
+end
 
 def verifyKnowledge(fact)
   triple = case fact
@@ -27,12 +37,17 @@ end
 
 def whoIs(pronoun)
   rep = case pronoun
-        when /el[ae]s?/;
+        when /el[ae]s?|eu/;
           $person
         else;
           $person = pronoun
           pronoun
   end
+  
+  names = Knowledge.keys
+  names.each do |k|
+    return k if k.match(/#{D}?#{rep}/)
+  end 
   rep
 end
 
@@ -40,7 +55,10 @@ def putTriple(triple, isRegistrable)
   if triple.nil?
     return "Não sei o que dizes"
   end
+
   triple[0] = whoIs(triple[0])
+  triple[1] = verb3Person(triple[1])
+
   unless Knowledge[triple[0]].nil?
     elem = Knowledge[triple[0]]
     if elem[triple[1]].nil?
@@ -85,10 +103,12 @@ end
 
 def getFact(verb, pronoun)
   person = whoIs(pronoun)
+  verb   = verb3Person(verb) 
+
   unless Knowledge[person].nil?
     unless Knowledge[person][verb].nil?
       pronoun2 = Knowledge[person][verb].sample
-      "#{pronoun} #{verb} #{pronoun2}"
+      "#{person} #{verb} #{pronoun2}"
     else
       "Não sei"
     end
@@ -111,10 +131,11 @@ def loadFile(fileName)
       end
     end
   end
+  p Knowledge
 end
 
 def registFact(fact, fileName)
   File.open(fileName, "a") do |f2|
-    f2.puts "#{fact[0]}\t- #{fact[1]}\t- #{fact[2]}"
+    f2.puts "#{fact[0]}\t- #{verb3Person(fact[1])}\t- #{fact[2]}"
   end
 end
