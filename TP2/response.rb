@@ -109,8 +109,8 @@ def get_normalResponse(sentence)
 
   when /Que dia é hoje?|Qual a data( de hoje)\?|[Dd]ata/
     date  = `date +"%d-%m-%Y"`
-    date2 = `date +"%d %b %Y"`
-    ["Hoje é #{date}", "Hoje é #{date2}"]
+    date2 = `date +"%d %b"`
+    ["Hoje é #{date}", "Hoje é dia #{date2}"]
 
   when Despedida;
     ["Adeus, gostei de falar contigo",
