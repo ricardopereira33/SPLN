@@ -49,7 +49,7 @@ def get_response(sentence)
   learned = isLearning(sentence)
 
   if learned.nil?
-    num = rand(1..5)
+    num = rand(1..10)
     res = case num 
       when 3;   get_proverb(sentence) 
       else;     get_normalResponse(sentence).sample  
@@ -176,7 +176,9 @@ def get_normalResponse(sentence)
 	 "Eu não gosto nada de Java."]
 
   when Linguagem;
-	["Gostas de %s?"]
+	["Gostas de %s?",
+	 "Que coisas interessantes fizeste em %s?",
+	 "Tens muita experiência em %s?"]
   # Eu
     
   when /Eu sou (.*)/;
@@ -236,20 +238,20 @@ def get_normalResponse(sentence)
      "Percebo, mas podes elaborar um pouco?",
      "De que maneira?"]
 
-  when /^Bem/;
+  when /(^Bem|[ÓOóo]timo)/;
     ["Ainda bem",
      "Fico feliz"]
 
   when /^Mal/;
-    ["Porquê?",
+    ["Por?",
      "Em que sentido?"]
 
-  when /^(?:É|E)s ([^\?])*\?/;
-    ["Porque é que é importante se seja %s?",
-     "Preferias que não fosse %s?",
+  when /^(?:É|E)s (?:de )? ([^\?]*)\?/;
+    ["Preferias que não fosse %s?",
+	 "Achas importante saber isso?",
      "Achas que sou?"]
     
-  when /^(?:É|E)s ([^\?])*/;
+  when /^(?:É|E)s ([^\?]*)/;
     ["Porque é que é dizes que sou %s?",
      "Preferias que não fosse %s?",
      "Podemos falar sobre ti?"]
@@ -267,8 +269,13 @@ def get_normalResponse(sentence)
     ["Boa %s!",
      "Olá"]
 
+  when /[Tt]udo bem\?/;
+	["Sim, e contigo?",
+	 "Estou ótima! Como vais?"]
+
   when /Não(.*)/;
-    ["Porque não?"]
+    ["Porque não?",
+	 "Porque tão negativo?"]
 
   when /(.*)!/;
     ["Claro que %s", 
@@ -276,8 +283,7 @@ def get_normalResponse(sentence)
 
   when /.*\.\.\.$/;
     ["Pareces um pouco inseguro",
-     "Podes continuar, por favor?",
-     "Está tudo bem, podes elaborar mais?"]
+     "Podes continuar, por favor?"]
 
   when /(.*)\?/;
     ["O que queres realmente saber?", 
@@ -288,7 +294,7 @@ def get_normalResponse(sentence)
     [res]
   end
 
-  if rep[0].length > 0
+  if rep[0].length > 0 && !$~.nil?
 	words = $~[1..2]&.map do |m| 
 	  reflector(m)&.downcase 
 	end
