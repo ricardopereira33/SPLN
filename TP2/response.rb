@@ -104,12 +104,13 @@ def get_normalResponse(sentence)
     ["#{value}"]
 
   when /Que horas são\?|Diz-me as horas|[Hh]oras/
-    hour = `date +%T`
-    ["#{hour}"]
+    hour = `date +"%H:%M"`
+    ["São #{hour}"]
 
   when /Que dia é hoje?|Qual a data( de hoje)\?|[Dd]ata/
-    date = `date +%D`
-    ["#{date}"]
+    date  = `date +"%d-%m-%Y"`
+    date2 = `date +"%d %b %Y"`
+    ["Hoje é #{date}", "Hoje é #{date2}"]
 
   when Despedida;
     ["Adeus, gostei de falar contigo",
