@@ -51,9 +51,12 @@ def get_response(sentence)
   if learned.nil?
     num = rand(1..10)
     res = case num 
-      when 3;   get_proverb(sentence) 
-      else;     get_normalResponse(sentence).sample  
+      when 3   
+        get_proverb(sentence) 
+      else     
+        get_normalResponse(sentence).sample  
     end
+
     $interation = 0
     return res if res.length > 0
     return ["Fala-me mais sobre isso", 
@@ -67,16 +70,16 @@ end
 def isLearning(sentence)
 	rep = case sentence
 
-  when /[Ss]abias que (.*)\?|Aprende que (.*)/;
+  when /[Ss]abias que (.*)\?|[Aa]prende que (.*)/;
     verifyKnowledge($1)
   
-  when /O que sabes\?|Conta-me algo/;
+  when /[Oo] que sabes\?|[Cc]onta-me algo/;
     getFactRandom()
   
-  when /O que (#{Conj}) (#{W})\?/;
-    getFact($1, $2)
+  when /[Oo]( que|nde) (#{Conj}) (#{W})\?/;
+    getFact($2, $3)
   
-  when /O que é que (#{W}) (#{Conj})\?/;
+  when /[Oo] que é que (#{W}) (#{Conj})\?/;
     getFact($2, $1)
 
   else;
@@ -89,6 +92,7 @@ def get_proverb(sentence)
   $interation += 1
   ps  = relevant_proverb(sentence)
   res = prepare_statement(ps.sample)
+
   return res if res.length > 0
   return get_normalResponse(sentence).sample if $interation < 3
   return ""
@@ -301,10 +305,10 @@ def get_normalResponse(sentence)
   end
 
   if rep[0].length > 0 && !$~.nil?
-	words = $~[1..2]&.map do |m| 
-	  reflector(m)&.downcase 
-	end
+	  words = $~[1..2]&.map { |m| reflector(m)&.downcase }
     return rep.map { |s| s % words }
+  elsif rep[0].length > 0 
+    return rep
   end
 
   return [""]
