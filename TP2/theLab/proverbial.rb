@@ -1,7 +1,7 @@
 require 'open-uri'
 require 'nokogiri'
 
-Irrelevant = /\b(d[aeo]|[aeo]|com|[àao]+s|para|em|[mt]e|és?|uma?|[et]u|que)\b/
+Irrelevant = /\b(n[ãa]o|d[aeo]|[aeo]|com|[àao]+s|para|em|[mt]e|és?|uma?|[et]u|que)\b/
 $proverbs = nil
 
 def get_proverbs 

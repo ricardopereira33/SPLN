@@ -17,17 +17,18 @@ if __FILE__ == $0
   loadFile("learning/knowledge.info")
   $proverbs = get_proverbs
 
-  print "Your name: "
+  puts "Ada\t> Olá, como te chamas?"
+  print "#{$actual_person}\t> "
   line = gets.chomp 
   $person = line
-  actualPerson = $person
+  $actual_person = $person
   
   loop do
-    print "#{actualPerson}\t> "
+    print "#{$actual_person}\t> "
     line = gets.chomp
     
     line = unthankful(line)
-    print "Ofelia\t> "
+    print "Ada\t> "
 
     unless analyze(line.capitalize)
       break

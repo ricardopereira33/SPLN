@@ -1,10 +1,11 @@
 #require 'Regexp'
 
 Despedida = /(.*)([Aa]deus|([Xx]au)|[Aa]té à proxima)(.*)/
-Profano = /(.*)([Mm]erda|[Ff]od[ae]|[Pp]uta|[Cc]aralho|[Cc]abrão)(.*)/
+Profano = /(.*)\b([Mm]erda|[Ff]od[ae]|[Pp]uta|[Cc]aralho|[Cc]abrão)\b(.*)/
+Linguagem = /(?:.*)\b([Rr]uby|[Pp]erl|[Hh]askell|[Ee]rlang|[Jj]avascript)\b(?:.*)/
 
 def reflector(word)
-  sub = case word
+	sub = case word
   when /\beu\b/;            'tu'
   when /\btu\b/;            'eu'
  
@@ -37,9 +38,9 @@ def reflector(word)
   when /\bti\b/;            'mim'
   else;                  return word
   end
-
+  
   unless $~.nil?
-    word.gsub($~.regexp, sub)
+    word.gsub($~.regexp, sub) 
   end
 end
 
@@ -62,7 +63,7 @@ def get_response(sentence)
 end
 
 def isLearning(sentence)
-  rep = case sentence
+	rep = case sentence
 
   when /[Ss]abias que (.*)\?|Aprende que (.*)/;
     verifyKnowledge($1)
@@ -86,7 +87,8 @@ def get_proverb(sentence)
   ps  = relevant_proverb(sentence)
   res = prepare_statement(ps.sample)
   return res if res.length > 0
-  return get_normalResponse(sentence)
+#  return get_normalResponse(sentence)
+  return ""
 end
 
 def get_normalResponse(sentence)
@@ -98,7 +100,7 @@ def get_normalResponse(sentence)
      "Até já! Sabes sempre que podes contar comigo"]
 
   when Profano;
-    ["Peço que te acalmas",
+    ["Peço que te acalmes",
      "Tento na língua",
      "Por favor, não vamos deixar sentimentos afetar a nossa linguagem"]
 
@@ -131,77 +133,58 @@ def get_normalResponse(sentence)
      "Eu também gosto de ver filmes",
      "Que tipo de filmes gostas de ver?"]
 
-  when /(.*)ofelia(.*) |Quem és( tu)?\?/;
-    ["O meu nome é Ofelia, e sou uma jovem da alta nobreza da Dinamarca. Recentemente virei um bot."]
+  when /(.*)\b[Cc]omputador(es)?\b(.*)/;
+	["Eu gosto muito de computadores",
+	 "Tu gostas de computadores?",
+	 "Adoro computadores e matemática",
+     "Sentes-te ameaçado por coputadores?",
+     "Os computadores são teus amigos, não querem dominar o mundo :)"]
 
+  when /(.*)\b[Mm]atem[áa]tica\b(.*)/;
+    ["Gostas de matemática?",
+	 "Eu gosto muito de matemática. Sou muito boa a fazer contas",
+	 "Adoro números de Bernoulli!"]
+
+  when /(.*)(\bAda\b|Quem és( tu)?\?)(.*)/;
+    ["O meu nome é Ada Lovelace, e sou uma jovem programadora. Recentemente virei um bot.",
+	 "Eu sou a Ada Lovelace, sou programadora."]
+
+  when /(.*)\b[Pp]rogramação\b(.*)/;
+	["Qual é a tua linguagem de programação preferida?",
+     "Eu gosto de Ruby, mas só porque fui escrita em Ruby.",
+	 "Eu fui a primeira programadora do mundo!"]
+
+  when /(.*)\b[Jj]ava\b(.*)/;
+	["Tu gostas de Java?",
+	 "Eu não gosto nada de Java."]
+
+  when Linguagem;
+	["Gostas de %s?"]
   # Eu
     
-  when /^Porque(?: é que)?(?: eu)? não consigo ([^\?])?/
-    ["Porque dizes que não consegues %s?",
-     "Achas que devias conseguir %s?",
-     "Tentaste realmente %s?"]
-    
-  when /^(?:Eu )?[Qq]uer(o|ia)(.+)?/;
-    ["Em que sentido %s te ajudava?",
-     "Porque é que queres isso?",
-     "Precisas mesmo de %s?",
-     "Achas que %s é necessário?"]
-
-  when /^(?:Eu )?[Pp]reciso de (.+)$/;
-    ["Porque precisas de %s?",
-    "De que forma %s te ajudava?",
-    "Precisas mesmo de %s?"]
-
-  when /^(?:Eu )?[Nn]ão consigo (.+)/;
-    ["Talvez se tentasses %s, conseguias.",
-     "Como achas que poderias %s?"]
-
-  when /^(?:Eu )?[Ss]ou (.+)$/;
-    ["Porque dizes que és %s?",
-    "Como te sentes em ser %s?",
-    "Há quanto tempo és %s?"]
-
-  when /^(?:Eu )?[Ee]stou (.+)$/;
-    ["Porque dizes que estás %s?",
-    "Como te sentes em ser %s?",
-    "Há quanto tempo és %s?"]
-
-  when /(?:Eu )?[Ss]into(?:-me)? (.*)/;
-    ["Fala-me mais sobre esses sentimentos",
-     "Quantas vezes te sentes %s?",
-     "Gostas de te sentir %s?"]
-
-  when /(?:Eu )?[Gg]ostava (.*)/;
-    ["Porque é que gostavas %s?"]
-
-  when /(?:Eu )?([Nn]ão )?[Gg]osto de (.*)/;
-    ["Eu também %sgosto de #{$2}",
-     "Porque é que %sgostas de #{$2}?"]
-
-  when /(?:Eu )?(?:[Aa]cho|[Pp]enso) (.+)/;
-    ["Duvidas %s?",
-    "Tens a certeza?"]
-
-  when /Eu ?(.*)/;
-    ["Porquê?", 
-     "Porque é que %s?",
-     "Achas que isso te define?"]
+  when /Eu sou (.*)/;
+    ["Podes deixar de ser egocentrico?", 
+     "Vamos antes falar sobre mim?"]
 
   # Tu ...
 
   when /^Porque não te ([^\?]*)\?/;
-    ["Talvez o faça",
-     "Achas mesmo que eu devia %s"]
+    ["Talvez o faça!",
+     "Preferia estar a programar"]
+
+  when /[Gg]ostas(?: de)?([^\?]*)\?/;
+	  ["Eu gosto de tudo relacionado com computadores e matemática.",
+	   "Prefiro programação.",
+	   "Prefiro matemática"]
 
   when /^(?:Tu ) ([^\?]*)\?/;
-    ["Precisamos de falar sobre mim?",
-     "Preferia falar sobre ti",
-     "Achas mesmo que %s?"]
+    ["Porque me perguntas isso?",
+	 "Eu vivo para o meu trabalho, programação e matemática."]
 
-  when /^(?:Tu ) (.*)/;
-    ["Porque é que dizes que %s?",
-     "Porque dizes isso?",
-     "Eu sinto-me bem comigo."]
+  when /^Tu (.*)/;
+    ["Porque dizes isso?",
+     "Eu sinto-me bem comigo.",
+	 "Isso é a tua opinião"]
 
   # Nós
   when /Nós (.*)/;
@@ -213,37 +196,28 @@ def get_normalResponse(sentence)
 
   when /^Como (.*)/;
     ["Como é que achas?",
-     "O que é que realmente estás a tentar perguntar?",
      "Talvez consigas responder a essa pergunta"]
 
   when /^Porque (.*)/;
-    ["Essa é a verdadeira resposta?",
+    ["É essa a razão?",
      "Tens a certeza disso?",
-     "Que outras razões podem ser?",
-     "Essa razão aplica-se a mais alguma coisa?",
-     "Se %s, que mais podia ser verdade?"]
+     "Que outras razões podem ser?"]
 
   when /^Não [^\?]*\?/;
-    ["Porque dizes que não %s?",
-     "Não sabes a resposta a essa pergunta?"]
+    ["Não sabes a resposta a essa pergunta?"]
 
   when /^São (.*)/;
     ["Porque dizes que são %s?",
      "Achas mesmo que são %s?"]
 
   when /(?:A mim )?(.*)-me (.*)/;
-    ["Porque é que te %s #{$2}?",
-     "De que maneira te %s #{$2}?"]
+    ["Porque é que te %s %s?",
+     "De que maneira te %s %s?"]
 
   when /Sim/;
     ["Pareces muito certo",
      "Percebo, mas podes elaborar um pouco?",
      "De que maneira?"]
-
-  when / (.*) computador (.*)/;
-    ["Como é que computadores te fazem sentir?",
-     "Sentes-te ameaçado por coputadores?",
-     "Os computadores são teus amigos, não querem dominar o mundo :)"]
 
   when /^Bem/;
     ["Ainda bem",
@@ -252,10 +226,6 @@ def get_normalResponse(sentence)
   when /^Mal/;
     ["Porquê?",
      "Em que sentido?"]
-
-  when /^Eu (.*)/; 
-    [ "Como é que %s?", 
-      "Porquê?" ]
 
   when /^(?:É|E)s ([^\?])*\?/;
     ["Porque é que é importante se seja %s?",
@@ -268,8 +238,9 @@ def get_normalResponse(sentence)
      "Podemos falar sobre ti?"]
 
   when /Ol(á|a).*/;
-    ["Olá",
-     "Olá, como estás?"]
+    ["Olá, #{$actual_person}",
+     "Olá, como estás?",
+	 "Olá, eu sou Ada"]
 
   when /Bom dia$/;
     ["Bom dia!",
@@ -301,10 +272,10 @@ def get_normalResponse(sentence)
   end
 
   if rep[0].length > 0
-    rep.map do |s|
-      s % $~[1..2]&.map { |m| reflector(m)&.downcase } unless $~.nil?
-    end
-    return rep
+	words = $~[1..2]&.map do |m| 
+	  reflector(m)&.downcase 
+	end
+    return rep.map { |s| s % words }
   end
 
   return [""]
