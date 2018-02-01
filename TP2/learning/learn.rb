@@ -4,7 +4,7 @@
 Knowledge = {}
 
 # Regex for Triple
-Verb = /é|gosta|criado|derivado|codifica/
+Verb = /é|gosta|criado|derivado|codifica|fica/
 Not = /não /
 Conj = /#{Not}?#{Verb}/
 Relation = /(.*) (#{Conj}) (.*)/
