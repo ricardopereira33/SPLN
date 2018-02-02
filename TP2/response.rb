@@ -88,10 +88,10 @@ def isLearning(sentence)
     begin
       value = eval(elem)
     rescue SyntaxError
-      return ["Não percebi..."]
+      return ["Ai essa Matemática...", "Isso não dá para calcular"].sample
     else 
-      return ["#{value}"] unless value.nil?
-      return ["Não percebi..."]
+      return ["#{value}", "Dá #{value}"].sample unless value.nil?
+      return ["Ai essa Matemática...", "Isso não dá para calcular"].sample
     end
 
   when /Que horas são\?|Diz-me as horas|[Hh]oras/
@@ -101,7 +101,7 @@ def isLearning(sentence)
   when /Que dia é hoje?|Qual a data( de hoje)\?|[Dd]ata/
     date  = `date +"%d-%m-%Y"`
     date2 = `date +"%d de %B"`
-    ["Hoje é #{date}", "Hoje é dia #{date2}"]
+    ["Hoje é #{date}", "Hoje é dia #{date2}"].sample
 
   else;
     nil
