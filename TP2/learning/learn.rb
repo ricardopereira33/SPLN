@@ -4,12 +4,12 @@
 Knowledge = {}
 
 # Regex for Word
-L = /[éãâóàáõ\w]+/
+L = /[êéãâóàáõ\w]+/
 D = /[oOaA]s? |[Uue]ma? |[Dd][eao] /
 W = /#{D}?#{L}/
 
 # Regex for Triple
-Verb = /é|sou|foi|fui|gosta|gosto|deriva|codifica|fica|fico/
+Verb = /é|sou|foi|fui|gosta|gosto|deriva|codifica|fica|fico|estou|está|vejo|vê|tem|tenho/
 A = /criado |derivado /
 Not = /não /
 Conj = /#{Not}?#{Verb}/
@@ -21,6 +21,9 @@ def verb3Person(verb)
     when /sou/;     'é'
     when /fui/;     'foi'
     when /fico/;    'fica'
+    when /estou/;   'está'
+    when /vejo/;    'vê'
+    when /tenho/;   'tem'
     else;           verb
   end
 end
@@ -37,11 +40,13 @@ end
 
 def whoIs(pronoun)
   rep = case pronoun
-        when /el[ae]s?|eu/;
-          $person
+        when /[Ee]l[ae]s?/;
+          $person.downcase
+        when /[Ee]u/;
+          $actual_person.downcase
         else;
           $person = pronoun
-          pronoun
+          pronoun.downcase
   end
   
   names = Knowledge.keys
