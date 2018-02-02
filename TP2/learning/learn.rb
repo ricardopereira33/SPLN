@@ -6,14 +6,14 @@ Knowledge = {}
 # Regex for Word
 L = /[êéãâóàáõ\w]+/
 D = /[oOaA]s? |[Uue]ma? |[Dd][eao] /
-W = /#{D}?#{L}/
+W = /#{D}?#{L} ?/
 
 # Regex for Triple
 Verb = /é|sou|foi|fui|gosta|gosto|deriva|codifica|fica|fico|estou|está|vejo|vê|tem|tenho/
 A = /criado |derivado /
 Not = /não /
 Conj = /#{Not}?#{Verb}/
-Relation = /(#{W}) (#{Conj}) (#{A}?#{W})/
+Relation = /(#{W}) (#{Conj}) (#{A}?#{W}+)/
 
 def verb3Person(verb)
   case verb
@@ -62,7 +62,7 @@ def putTriple(triple, isRegistrable)
   end
 
   triple[0] = whoIs(triple[0])
-  triple[1] = verb3Person(triple[1])
+  triple[1] = triple[1].split.map { |w| verb3Person(w) }.join(' ')
 
   unless Knowledge[triple[0]].nil?
     elem = Knowledge[triple[0]]
@@ -108,7 +108,7 @@ end
 
 def getFact(verb, pronoun)
   person = whoIs(pronoun)
-  verb   = verb3Person(verb) 
+  verb   = verb.split.map { |w| verb3Person(w) }.join(' ') 
 
   unless Knowledge[person].nil?
     unless Knowledge[person][verb].nil?
@@ -131,7 +131,7 @@ def loadFile(fileName)
   File.open(fileName, "r") do |f1|
     while line = f1.gets
       case line
-      when /(#{W})\s+- (#{Conj})\s+- (#{A}?#{W})/;
+      when /(#{W})\s+- (#{Conj})\s+- (#{A}?#{W}+)/;
         putTriple([$1, $2, $3], false)
       end
     end
