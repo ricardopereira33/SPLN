@@ -131,7 +131,6 @@ def loadFile(fileName)
       end
     end
   end
-  p Knowledge
 end
 
 def registFact(fact, fileName)

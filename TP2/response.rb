@@ -85,8 +85,14 @@ def isLearning(sentence)
 
   when /Quanto é (.*)\?/
     elem = $1.gsub(/[^0-9+-\/*()]/, "")
-    value = eval(elem)
-    ["#{value}"]
+    begin
+      value = eval(elem)
+    rescue SyntaxError
+      return ["Não percebi..."]
+    else 
+      return ["#{value}"] unless value.nil?
+      return ["Não percebi..."]
+    end
 
   when /Que horas são\?|Diz-me as horas|[Hh]oras/
     hour = `date +"%H:%M"`
