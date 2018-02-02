@@ -84,7 +84,7 @@ def isLearning(sentence)
     getFact($2, $1)
 
   when /Quanto é (.*)\?/
-    elem = $1.gsub(/[^0-9+-\/*()]/, "")
+    elem = $1.gsub(/[^0-9+-\/*()=]/, "")
     begin
       value = eval(elem)
     rescue SyntaxError
