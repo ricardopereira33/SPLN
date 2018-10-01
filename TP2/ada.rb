@@ -1,4 +1,4 @@
-#require 'Regexp'
+require 'Regexp'
 require_relative 'response'
 require_relative 'learning/learn'
 require_relative 'theLab/proverbial'
@@ -19,14 +19,14 @@ if __FILE__ == $0
 
   puts "Ada\t> Olá, como te chamas?"
   print "#{$actual_person}\t> "
-  line = gets.chomp 
+  line = gets.chomp
   $person = line
   $actual_person = $person
-  
+
   loop do
     print "#{$actual_person}\t> "
     line = gets.chomp
-    
+
     line = unthankful(line)
     print "Ada\t> "
 
