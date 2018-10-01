@@ -1,4 +1,4 @@
-#require 'Regexp'
+require 'Regexp'
 
 # Vars
 Knowledge = {}
@@ -48,11 +48,11 @@ def whoIs(pronoun)
           $person = pronoun
           pronoun.downcase
   end
-  
+
   names = Knowledge.keys
   names.each do |k|
     return k if k.match(/#{D}?#{rep}/)
-  end 
+  end
   rep
 end
 
@@ -108,7 +108,7 @@ end
 
 def getFact(verb, pronoun)
   person = whoIs(pronoun)
-  verb   = verb.split.map { |w| verb3Person(w) }.join(' ') 
+  verb   = verb.split.map { |w| verb3Person(w) }.join(' ')
 
   unless Knowledge[person].nil?
     unless Knowledge[person][verb].nil?
