@@ -1,0 +1,1 @@
+Exectuar: ruby ada.rb
