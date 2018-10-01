@@ -1,1 +1,1 @@
-Exectuar: ruby ada.rb
+# Exectuar: ruby ada.rb
