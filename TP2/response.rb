@@ -1,4 +1,4 @@
-#require 'Regexp'
+require 'Regexp'
 
 Despedida = /(.*)([Aa]deus|([Xx]au)|[Aa]té à proxima)(.*)/
 Profano = /(.*)\b([Mm]erda|[Ff]od[ae](sse)?|[Pp]uta|[Cc]aralho|[Cc]abrão)\b(.*)/
@@ -9,7 +9,7 @@ def reflector(word)
 	sub = case word
   when /\beu\b/;            'tu'
   when /\btu\b/;            'eu'
- 
+
   # Verbos irregulares
   when /\bsou\b/;           'és'
   when /\bvou\b/;           'vais'
@@ -39,9 +39,9 @@ def reflector(word)
   when /\bti\b/;            'mim'
   else;                  return word
   end
-  
+
   unless $~.nil?
-    word.gsub($~.regexp, sub) 
+    word.gsub($~.regexp, sub)
   end
 end
 
@@ -50,16 +50,16 @@ def get_response(sentence)
 
   if learned.nil?
     num = rand(1..10)
-    res = case num 
-      when 3   
-        get_proverb(sentence) 
-      else     
-        get_normalResponse(sentence).sample  
+    res = case num
+      when 3
+        get_proverb(sentence)
+      else
+        get_normalResponse(sentence).sample
     end
 
     $interation = 0
     return res if res.length > 0
-    return ["Fala-me mais sobre isso", 
+    return ["Fala-me mais sobre isso",
 			"Preferia falar sobre matemática",
 			"Preferia falar sobre programação",
 			"Vamos mudar de assunto, por favor"].sample
@@ -73,13 +73,13 @@ def isLearning(sentence)
 
   when /[Ss]ab(?:ias|es) (?:que )?(.*)\?|Aprende que (.*)/;
     verifyKnowledge($1)
-  
+
   when /[Oo] que sabes\?|[Cc]onta-me algo/;
     getFactRandom()
-  
+
   when /[Oo]( que|nde) (#{Conj}) (#{W})\?/;
     getFact($2, $3)
-  
+
   when /[Oo] que é que (#{W}) (#{Conj})\?/;
     getFact($2, $1)
 
@@ -89,7 +89,7 @@ def isLearning(sentence)
       value = eval(elem)
     rescue SyntaxError
       return ["Ai essa Matemática...", "Isso não dá para calcular"].sample
-    else 
+    else
       return ["#{value}", "Dá #{value}"].sample unless value.nil?
       return ["Ai essa Matemática...", "Isso não dá para calcular"].sample
     end
@@ -202,7 +202,7 @@ def get_normalResponse(sentence)
   when /(.*)\b[Jj]ava\b(.*)/;
 	["Tu gostas de Java?",
 	 "Eu não gosto nada de Java."]
-	
+
   when Linguagem;
 	["Gostas de %s?",
 	 "Que coisas interessantes fizeste em %s?",
@@ -214,9 +214,9 @@ def get_normalResponse(sentence)
 	 "A matemática costuma ter respostas para muitas perguntas"]
 
   # Eu
-    
+
   when /Eu sou (.*)/;
-    ["Podes deixar de ser egocentrico?", 
+    ["Podes deixar de ser egocentrico?",
      "Vamos antes falar sobre mim?",
 	 "E eu sou a primeira programadora do mundo, por isso cala-te."]
 
@@ -240,7 +240,7 @@ def get_normalResponse(sentence)
 	 "Achas importante saber se sou %s?",
      "Achas que sou?",
 	 "Eu sou programadora."]
-    
+
   when /^(?:Tu )?(?:É|E)s ([^\?]*)/;
     ["Porque é que dizes que sou %s?",
      "Preferias que não fosse %s?",
@@ -321,7 +321,7 @@ def get_normalResponse(sentence)
 	 "A negação de uma negação é uma afirmação"]
 
   when /(.*)!$/;
-    ["Claro que %s", 
+    ["Claro que %s",
      "Achas mesmo isso?",
 	 "Pareces ter muita certeza no que dizes"]
 
@@ -330,11 +330,11 @@ def get_normalResponse(sentence)
      "Podes continuar, por favor?"]
 
   when /(.*)\?/;
-    ["O que queres realmente saber?", 
+    ["O que queres realmente saber?",
      "Queres mesmo que te responda a isso?",
 	 "Podemos sempre fazer um programa para responder a isso"]
 
-  else; 
+  else;
     res = get_proverb(sentence)
     [res]
   end
@@ -342,7 +342,7 @@ def get_normalResponse(sentence)
   if rep[0].length > 0 && !$~.nil?
 	  words = $~[1..2]&.map { |m| reflector(m)&.downcase }
     return rep.map { |s| s % words }
-  elsif rep[0].length > 0 
+  elsif rep[0].length > 0
     return rep
   end
 
